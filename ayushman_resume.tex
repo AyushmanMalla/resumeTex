@@ -1,0 +1,235 @@
+\documentclass[10pt,a4paper]{article}
+
+% Page layout
+\usepackage[a4paper,left=1.25cm,right=1.25cm,top=1.3cm,bottom=1.3cm]{geometry}
+
+% Necessary packages
+\usepackage[unicode]{hyperref}
+\usepackage{hyperxmp}
+
+\hypersetup{
+    pdftitle={Malla Sashi Ayushman},
+    pdfsubtitle={Résumé},
+    pdflang={en},
+    pdfmetalang={en},
+    pdfdate={D:20240000000000},
+    pdfcreationdate={D:20240000000000},
+    pdfmoddate={D:20240000000000},
+    pdfmetadate={D:20240000000000},
+    pdfcreator={},
+    pdfproducer={},
+}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[fixed]{fontawesome5}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\usepackage[colorlinks]{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue,    % <- This sets the color of \href links
+  linkcolor=blue,   % <- For internal links like \ref
+  citecolor=blue    % <- For \cite if needed
+}
+
+% Font settings
+\usepackage{tgpagella}
+\usepackage{mathpazo}
+
+% Font size control variables
+\newcommand{\cvsectionfontsize}{13}
+\newcommand{\cvtaglinefirstfontsize}{12}
+\newcommand{\cvtaglinesecondfontsize}{12}
+\newcommand{\cvbulletfontsize}{11}
+
+% Disable numbering for sections
+\setcounter{secnumdepth}{0}
+
+% Commands
+\newcommand{\cvsection}[3][.9em]{
+  \vspace{-2.7em}
+  \section[#3]{\textbf{\scalebox{.68}{\faIcon{#2}}~\fontsize{\cvsectionfontsize}{\cvsectionfontsize}\selectfont\MakeUppercase{#3}}}
+  \vspace{-1.8em}
+  \noindent\makebox[\textwidth]{\rule{\textwidth}{0.4pt}}
+  \\
+  \vspace{#1}
+}
+
+\newcommand{\cvtagline}[5][1em]{
+  \vspace{-1em}
+  \noindent\begin{tabularx}{\textwidth}{@{}Xr@{}}
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#2}} & 
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#3}} \\
+    \vspace{-0.7em}
+    {\fontsize{\cvtaglinesecondfontsize}{\cvtaglinesecondfontsize}\selectfont{#4}} & 
+    {\fontsize{\cvtaglinesecondfontsize}{\cvtaglinesecondfontsize}\selectfont\textit{#5}} \\
+  \end{tabularx}
+  \\
+  \vspace{#1}
+}
+
+\newcommand{\cvsingletagline}[3][0.5em]{
+  \vspace{-1em}
+  \noindent\begin{tabularx}{\textwidth}{@{}Xr}
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#2}} & 
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#3}} \\
+  \end{tabularx}
+  \\
+  \vspace{#1}
+}
+
+\newcommand{\cvbullets}[2][1em]{
+  \vspace{-1.9em}
+  {\fontsize{\cvbulletfontsize}{\cvbulletfontsize}\selectfont
+    \begin{itemize}[left=0pt,labelsep=1em]
+      \setlength\itemsep{0.1em}
+      \setlength\labelwidth{1em}
+      \setlength\parskip{0pt}
+      \setlength{\baselineskip}{1.25\baselineskip}
+      
+      #2
+    \end{itemize}
+  }
+  \vspace{#1}
+}
+
+\begin{document}
+
+\pagestyle{empty}
+
+% Candidate Name
+\begin{center}
+  {\bfseries\huge\scshape \underline{Ayushman} Malla } \\
+
+  \vspace{.5em}
+ \fontsize{12}{8}
+ INTERNSHIP AVAILABILITY: \textbf{July 2025 - Dec 2025}\\
+ \vspace{.2em}
+ FULL-TIME JOB AVAILABILITY: \textbf{May 2026 onwards}
+ \vspace{0.5em}
+
+  $ | $
+  \href{mailto:mall0006@e.ntu.edu.sg}{\faEnvelope \space mall0006@e.ntu.edu.sg}
+  $ | $
+  \href{tel:(+65)81770933}{\faPhone \space (+65) 8177 0933}
+  $ | $
+  \href{https://www.linkedin.com/in/ayushman-malla-952900229/}{\faLinkedin \space linkedin}
+  $ | $ \\
+  \vspace{1em}
+\end{center}
+
+% Education
+\cvsection{graduation-cap}{Education}
+
+\cvtagline{Nanyang Technological University}{Aug 2022 - Dec 2025(Expected)}{School of Electrical and Electronic Engineering}{}
+\cvbullets{
+  \item Bachelor of Engineering \textbf{(Electrical and Computer Engineering)}
+  \item \textbf{Honours (Distinction) (Expected)}; Current CGPA: 4.5/5
+  \item \textbf{NTU President's Research Scholar}
+  \item Minor Study: \textbf{Math and Computing}
+  \item Specialization: \textbf{Data Intelligence and Machine Learning}
+  \item Relevant Modules/Online Certifications: \textit{(1) Probability \& Introduction to Statistics (2) Data Structure and Algorithms (3) Math for Machine Learning (4) Computational Intelligence (5) Image Processing and Computer Vision (6) Advantest 93k SMT7 Certified}
+}
+
+% Professional Experience
+\cvsection{briefcase}{Professional Experience}
+
+\cvsingletagline{Advanced Micro Devices (AMD) Singapore, \underline{Enterprise CPU Intern}}{Jan 2025 – Present}
+\cvbullets{
+  \item Working with the AMD Enterprise (AMD Epyc) team to debug Intellectual Property(IP) Failures in the Memory-Built-in-Self-Test(MBIST) suite
+  \item Expected to improve service quality using scripting algorithms to reduce the 'time to debug' for high priority CPU Units – developing an automated tool to explore an IP spec space of over \underline{\textbf{650,000}} points iteratively and find failure points
+  \item Learning testing methodologies in silicon design along with operation of \textbf{Automated Test Equipment (ATE) Hardware} and  System Level Testing (SLT)  
+}
+
+\cvsingletagline{Unilever Limited, \underline{Technology Intern}}{May 2024 – Jul 2024}
+\cvbullets{
+  \item Collaborated with a cross-functional team of Finance and Supply Chain to develop and validate a robust Business Waste Management system using statistical analysis and accountancy principles.
+  \item Achieved to unlock an annual saving of \underline{\textbf{ 1 million USD}} per business group in the Unilever Portfolio of companies.
+  \item Automated report generation that enabled monthly governance discussions across relevant stakeholders
+}
+
+%projects
+\cvsection{code}{Interest Projects/ Research Experience}
+
+\cvtagline{NTU URECA (Undergraduate Research Experience on CAmpus)}{Jul 2023 – Aug 2024}{URECA Project: \textbf{\textit{Deep Learning on FPGAs}}}{}
+\cvbullets{
+  \item Expected to implement Deep Learning Algorithms (Variational Auto Encoders) on Field Programmable Gate Arrays (FPGAS) for various applications in \textbf{\underline{Finance, UAVs, Signal Processing, etc.}}
+  \item Required extensive knowledge of \textbf{Statistical Methods, VHDL Programming, Deep Learning and Computer Architecture.}
+  \item Paper accepted to the \textbf{\underline{ International Conference for Undergraduate Research}} (ICUR) and expected to be recognized in IEEE Proceedings. Awarded the NTU President's Research Scholar Title.
+}
+
+\cvtagline{FinRL(Financial Reinforcement Learning) Project}{Jul 2023 – Present}{Deep Reinforcement Learning for trading/portfolio rebalancing}{}
+\cvbullets{
+  \item Implementing additional functionality to the FinRL library (open source) in Python: uses multiple deep learning agents to train on real-time market data from sources like yahoo finance along with other technical indicators (MACD and RSI).
+  \item Building data visualization tools to push for an industrial platform.
+  \item Exploring application to financial instruments other than equities and cryptocurrencies to the model.
+}
+
+\cvsingletagline{NTU, \underline{Natural Language Processing Research Assistant}}{Dec 2023 – Aug 2025(Expected)}
+\cvbullets{
+  \item Analyzed the difference in learning experiences of over 2000 STEM and NON-STEM students in an interdisciplinary course.
+  \item Leveraged statistical techniques (p-testing, ANOVA, etc) for Quantitative analysis and NLP techniques (LDA, Topic Modelling, Sentiment Analysis) for Qualitative Analysis
+  \item Research Paper expected to be published in relevant tier 1 journals.
+}
+
+\cvtagline{Simulator for Carbon Tax Pricing}{Mar 2024 – Mar 2024}{Hackathon Project: RL  Model to simulate macro-economic environment}{}
+\cvbullets{
+  \item Collaborated with a team of 3 to develop a webApp simulator for policy makers to backtest economic policies to see how different carbon tax rates effect different industries.
+  \item Implemented a Reinforcement Learning (RL) environment within the simulator, leveraging Proximal Policy Optimization (PPO) algorithms to model and optimize industry actions in response to policy changes.
+}
+
+\cvsingletagline{NTU, \underline{Research Assistant Intern}}{May 2023 - Jul 2023}
+\cvbullets{
+\item Developed data pipeline that enabled API calls to Twitter and Botometer API to check bot score of users.
+\item Conducted data analysis on \textbf{\underline{420,000+}} accounts based on bot scores.
+\item Achieved theoretical limit of data collection speed due to API Rate limits; successfully collected 125,000 users’ scores within 175 hours [Limit = 720 requests/hour, Achieved = 714 requests/hour]
+
+}
+
+%co-curricular activities
+\cvsection{lightbulb}{co-curricular activities}
+
+\cvsingletagline{ AMD Open Hardware Competition, \underline{Team Leader}}{Apr 2025 - Present}
+\cvbullets{
+\item Participating in the \href{https://www.openhw.eu/}{AMD Open Hardware Competition} under the Accelerated Computing Track to innovate in the space of FPGA Development and Machine Learning.
+\item  Collaborating with a team of 4 core members – involves hardware design, verification, testbenches, and deployment
+}
+
+\cvsingletagline{National SuperComputing Center(NSCC) X AMD, \underline{Participant}}{May 2025 - May 2025}
+\cvbullets{
+\item Participated in the ROCm workshop to deploy LLm inference servers at scale - end-to-end DevOps of constructing a GPU cluster using vLLM, tensorflow-rocm and CUDA. 
+}
+
+\cvsingletagline{Nanyang Technlogical University, \underline{Teaching Assisstant}}{Aug 2023 - Dec 2024}
+\cvbullets{
+\item Recruited by NTU to tutor students on 3 modules: Physics, Mathematics, and Data Structures and Algorithms [C Language \& Python].
+\item Tutored 40 students and curated study material for courses.
+\item  Over 80\% of the students have proceeded to score an A- or above(Grade Point 4.5)
+}
+
+\cvtagline{NTU-EEE Machine Learning and Data Analytics Lab(MDLA)}{July 2023 - Present}{\underline{General Advisor}}{}
+\cvbullets{
+\item Promoted twice (Subcommittee – Vice President(Operations) – General Advisor) for continued contribution, commitment and excellence.
+\item Responsible for leading team of 10 portfolio members and coordinating with other committees regarding workshop content, research/project interests, and industry partnerships.
+
+}
+
+% Skills
+\cvsection{wrench}{Skills}
+
+\cvbullets{
+  \item \textbf{Software Programming:} Python, C, C++, HTML/CSS, JavaScript, SQL, Bash, Arduino IDE
+  \item \textbf{Software Applications/ Frameworks:} Git, Numpy, Pandas, Flask, Keras, PyTorch, TensorFlow, Seaborn, Matplotlib, SciPy, AutoDesk Fusion 360, Quartus Lite, Advanced Excel, Vivado HLS, Vitis SDK, Advantest93k ATE/SLT Platforms, Silicon Design Verification – TestBench Development, Docker, CI/CD, vLLM, ROCm, CUDA
+}
+
+% For ATS systems
+\scalebox{0.001}{\textcolor{white}{Machine Learning, Deep Learning, Artificial Intelligence, Data Science, Computer Vision, Natural Language Processing, Reinforcement Learning, FPGA, Hardware Design, Software Development, Research, Teaching, Leadership, Project Management, Team Collaboration, Problem Solving, Technical Writing, Presentation Skills}}
+
+\end{document} 
