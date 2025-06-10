@@ -71,19 +71,29 @@ def scroll_to_bottom(driver, step: int = 400, pause: float = 0.5):
 
 def readability_extract(driver) -> str:
     try:
-        # Inject Readability script (UMD-compatible build)
-        with open("readability.min.js", "r", encoding="utf-8") as f:
-            readability_js = f.read()
-            driver.execute_script(readability_js)
+        # Load Readability from CDN into browser context
+        driver.execute_script("""
+            if (!window.Readability) {
+                let script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@mozilla/readability@0.4.4/Readability.min.js';
+                script.type = 'text/javascript';
+                script.async = false;
+                document.head.appendChild(script);
+            }
+        """)
 
-        # Inject DOMPurify to sanitize HTML if you want (optional, but can skip for now)
+        # Wait a moment to ensure it's loaded
+        time.sleep(2)
 
-        # Now run Readability on a cloned document
-        script = """
-            let article = new Readability(document.cloneNode(true)).parse();
-            return article ? article.textContent : "";
-        """
-        content = driver.execute_script(script)
+        # Now execute Readability
+        content = driver.execute_script("""
+            if (window.Readability) {
+                let article = new Readability(document.cloneNode(true)).parse();
+                return article ? article.textContent : "";
+            } else {
+                return "";
+            }
+        """)
         return content or ""
     except Exception as e:
         logging.warning(f"Readability extraction failed: {e}")
