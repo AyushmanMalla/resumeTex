@@ -3,6 +3,8 @@
 import re
 from typing import Dict
 
+RESUME_PATH = r"C:\Users\Ayushman\Desktop\CODES\resumeTeX\ayushman_resume.tex" # Replace with the path to your resume file instead
+
 def parse_latex_resume(tex_path: str) -> Dict[str, str]:
     """
     Parses a LaTeX resume and returns a dictionary with sections and their contents.
@@ -30,7 +32,12 @@ def parse_latex_resume(tex_path: str) -> Dict[str, str]:
     content = re.sub(r'\n\s*\n', '\n', content) # content = re.sub(r'\n\s*\n', '\n', content)
     content = re.sub(r'[ \t]+', ' ', content) #Collpase multiple spaces/newlines
     content = re.sub(r'[ \t]+', ' ', content) # Collapse multiple space/newlines
-
+    print("\n -- Resume Extracted -- \n")
 
     return content
 
+#UNCOMMENT BELOW FOR INDIVIDUAL TESTING IF REQUIRED
+
+# if __name__ == "__main__":
+#     print("\n -- Resume Extracted -- \n")
+#     print(parse_latex_resume(RESUME_PATH))
