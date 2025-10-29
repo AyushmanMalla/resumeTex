@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
-CHROMEDRIVER_PATH = r"C:\Users\Ayushman\.wdm\drivers\chromedriver\win64\137.0.7151.68\chromedriver-win64\chromedriver.exe"
+CHROMEDRIVER_PATH = r"C:\Users\Ayushman\.wdm\drivers\chromedriver\win64\141.0.7390.123\chromedriver-win64\chromedriver.exe"
 
 def setup_driver(headless: bool = True, window_size: str = "1920,1080"):
     if not os.path.exists(CHROMEDRIVER_PATH):
