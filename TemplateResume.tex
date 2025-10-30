@@ -1,0 +1,264 @@
+\documentclass[10pt,a4paper]{article}
+
+% Page layout
+\usepackage[a4paper,left=1.25cm,right=1.25cm,top=1.3cm,bottom=1.1cm]{geometry}
+
+% Necessary packages
+\usepackage[unicode]{hyperref}
+\usepackage{hyperxmp}
+
+\hypersetup{
+    pdftitle={Two Page Template},
+    pdfsubtitle={Résumé},
+    pdflang={en},
+    pdfmetalang={en},
+    pdfdate={D:20240000000000},
+    pdfcreationdate={D:20240000000000},
+    pdfmoddate={D:20240000000000},
+    pdfmetadate={D:20240000000000},
+    pdfcreator={},
+    pdfproducer={},
+}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[fixed]{fontawesome5}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\usepackage[colorlinks]{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue,    % <- This sets the color of \href links
+  linkcolor=blue,   % <- For internal links like \ref
+  citecolor=blue    % <- For \cite if needed
+}
+
+% Font settings
+\usepackage{tgpagella}
+\usepackage{mathpazo}
+\definecolor{cvgray}{gray}{0}
+
+% Font size control variables
+\newcommand{\cvsectionfontsize}{13}
+\newcommand{\cvtaglinefirstfontsize}{12}
+\newcommand{\cvtaglinesecondfontsize}{12}
+\newcommand{\cvbulletfontsize}{11}
+
+% Disable numbering for sections
+\setcounter{secnumdepth}{0}
+
+% Commands
+\newcommand{\cvsection}[3][.9em]{
+  \vspace{-2.7em}
+  \section[#3]{\textbf{\scalebox{.68}{\faIcon{#2}}~\fontsize{\cvsectionfontsize}{\cvsectionfontsize}\selectfont\MakeUppercase{#3}}}
+  \vspace{-1.8em}
+  \noindent\makebox[\textwidth]{\rule{\textwidth}{0.4pt}}
+  \\
+  \vspace{#1}
+}
+
+% \newcommand{\cvtagline}[5][1em]{
+%   \vspace{-1em}
+%   \noindent\begin{tabularx}{\textwidth}{@{}Xr@{}}
+%     {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#2}} & 
+%     {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#3}} \\
+%     \vspace{-0.7em}
+%     {\fontsize{\cvtaglinesecondfontsize}{\cvtaglinesecondfontsize}\selectfont{#4}} & 
+%     {\fontsize{\cvtaglinesecondfontsize}{\cvtaglinesecondfontsize}\selectfont\textit{#5}} \\
+%   \end{tabularx}
+%   \\
+%   \vspace{#1}
+% }
+
+\newcommand{\cvtagline}[5][1em]{
+  \vspace{-0.8em}
+  \noindent\begin{tabularx}{\textwidth}{@{}Xr@{}}
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#2}} & 
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#3}} \\
+    \vspace{-0.7em}
+    {\fontsize{\cvtaglinesecondfontsize}{\cvtaglinesecondfontsize}\selectfont{#4}} & 
+    {\fontsize{\cvtaglinesecondfontsize}{\cvtaglinesecondfontsize}\selectfont\textit{#5}} \\
+  \end{tabularx}
+  \\
+  \vspace{0.5em}
+}
+\newcommand{\cvsingletagline}[3][0.5em]{
+  \vspace{-1em}
+  \noindent\begin{tabularx}{\textwidth}{@{}Xr}
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#2}} & 
+    {\fontsize{\cvtaglinefirstfontsize}{\cvtaglinefirstfontsize}\selectfont\textbf{#3}} \\
+  \end{tabularx}
+  \\
+  \vspace{#1}
+}
+
+
+\newcommand{\cvbullets}[2][1em]{
+  \vspace{-1.8em}
+  {\fontsize{\cvbulletfontsize}{\cvbulletfontsize}\selectfont
+  \color{cvgray}
+    \begin{itemize}[left=0pt,labelsep=0.25em, rightmargin=2.5em]
+      \setlength\itemsep{0em}
+      \setlength\labelwidth{0.1em}
+      \setlength\parskip{0pt}
+      \setlength{\baselineskip}{1.35\baselineskip}
+      
+      #2
+    \end{itemize}
+  }
+  \vspace{#1}
+}
+
+
+% \newcommand{\cvbullets}[2][1em]{
+%   \vspace{-1.9em}
+%   {\fontsize{\cvbulletfontsize}{\cvbulletfontsize}\selectfont
+%     \begin{itemize}[left=0pt,labelsep=1em]
+%       \setlength\itemsep{0.1em}
+%       \setlength\labelwidth{1em}
+%       \setlength\parskip{0pt}
+%       \setlength{\baselineskip}{1.25\baselineskip}
+      
+%       #2
+%     \end{itemize}
+%   }
+%   \vspace{#1}
+% }
+
+\begin{document}
+
+\pagestyle{empty}
+
+% Candidate Name
+\begin{center}
+  {\bfseries\Large\scshape \underline{Moh} Lester } \\
+
+  \vspace{.5em}
+ \fontsize{12}{8}
+ INTERNSHIP AVAILABILITY: \textbf{Jan 2026 - June 2026}\\
+ \vspace{.2em}
+ FULL-TIME JOB AVAILABILITY: \textbf{May 2026 onwards}
+ \vspace{0.5em}
+
+  $ | $
+  \href{mailto:hehe@e.ntu.edu.sg}{\faEnvelope \space hehe@e.ntu.edu.sg}
+  $ | $
+  \href{tel:(+65)69696969}{\faPhone \space (+65) 6969 6969}
+  $ | $
+  \href{https://www.linkedin.com/}{\faLinkedin \space linkedin}
+  $ | $ \\
+  \vspace{1em}
+\end{center}
+
+% Education
+\cvsection{graduation-cap}{Education}
+
+\cvtagline{Nanyang Technological University}{Aug 2022 - May 9999(Expected)}{School of Electrical and Electronic Engineering}{}
+\cvbullets{
+  \item Bachelor of Engineering \textbf{(Electrical and Computer Engineering)}
+  \item \textbf{Honours (Distinction) (Expected)}; Current CGPA: 5/5
+  \item \textbf{NTU President's Research Scholar}
+  \item Minor Study: \textbf{Math and Computing}
+  \item Specialization: \textbf{Data Intelligence and Machine Learning}
+  \item Relevant Modules/Online Certifications: \textit{(1) Probability \& Introduction to Statistics (2) Data Structure and Algorithms (3) Math for Machine Learning (4) Image Processing and Computer Vision }
+}
+
+% Professional Experience
+\cvsection{briefcase}{Internships}
+
+
+\cvsingletagline{Ooga Booga, \underline{Hardware Engineering Intern}}{Jul 2025 – Forever}
+\cvbullets{
+  \item  Clonwery maxxing - drink free coffee all day
+  \item  Maximise Shareholder value brev
+}
+
+\cvsingletagline{Ooga Booga, \underline{Hardware Engineering Intern}}{Jul 2025 – Forever}
+\cvbullets{
+  \item  Clonwery maxxing - drink free coffee all day
+  \item  Maximise Shareholder value brev
+}
+
+
+\cvsingletagline{Ooga Booga, \underline{Hardware Engineering Intern}}{Jul 2025 – Forever}
+\cvbullets{
+  \item  Clonwery maxxing - drink free coffee all day
+  \item  Maximise Shareholder value brev
+}
+
+
+%projects
+\cvsection{code}{Interest Projects/ Research Experience}
+
+\cvtagline{NTU URECA (Undergraduate Research Experience on CAmpus)}{Jul 2023 – Aug 3455}{URECA Project: \textbf{\textit{Deep Learning on your Mom}}}{}
+\cvbullets{
+  \item  {Yappanomics setence here}
+  \item {Suck an egg}
+  \item Paper accepted to the \textbf{\underline{ International Conference for Undergraduate Research}} (ICUR) and expected to be recognized in IEEE Proceedings. Awarded the NTU President's Research Scholar Title.
+}
+
+\cvtagline{NTU URECA (Undergraduate Research Experience on CAmpus)}{Jul 2023 – Aug 3455}{URECA Project: \textbf{\textit{Deep Learning on your Mom}}}{}
+\cvbullets{
+  \item  {Yappanomics setence here}
+  \item {Suck an egg}
+  \item Paper accepted to the \textbf{\underline{ International Conference for Undergraduate Research}} (ICUR) and expected to be recognized in IEEE Proceedings. Awarded the NTU President's Research Scholar Title.
+}
+
+\cvtagline{NTU URECA (Undergraduate Research Experience on CAmpus)}{Jul 2023 – Aug 3455}{URECA Project: \textbf{\textit{Deep Learning on your Mom}}}{}
+\cvbullets{
+  \item  {Yappanomics setence here}
+  \item {Suck an egg}
+  \item Paper accepted to the \textbf{\underline{ International Conference for Undergraduate Research}} (ICUR) and expected to be recognized in IEEE Proceedings. Awarded the NTU President's Research Scholar Title.
+}
+
+ \cvtagline{NTU URECA (Undergraduate Research Experience on CAmpus)}{Jul 2023 – Aug 3455}{URECA Project: \textbf{\textit{Deep Learning on your Mom}}}{}
+\cvbullets{
+  \item  {Yappanomics setence here}
+  \item {Suck an egg}
+  \item Paper accepted to the \textbf{\underline{ International Conference for Undergraduate Research}} (ICUR) and expected to be recognized in IEEE Proceedings. Awarded the NTU President's Research Scholar Title.
+}
+
+\cvtagline{NTU URECA (Undergraduate Research Experience on CAmpus)}{Jul 2023 – Aug 3455}{URECA Project: \textbf{\textit{Deep Learning on your Mom}}}{}
+\cvbullets{
+  \item  {Yappanomics setence here}
+  \item {Suck an egg}
+  \item Paper accepted to the \textbf{\underline{ International Conference for Undergraduate Research}} (ICUR) and expected to be recognized in IEEE Proceedings. Awarded the NTU President's Research Scholar Title.
+}
+
+%co-curricular activities
+\cvsection{lightbulb}{co-curricular activities}
+
+\cvsingletagline{ Dilly Dally Club, President}{Apr 2025 - Forever}
+\cvbullets{
+\item  Always enabling ppl to dilly the dally
+\item  Maximised amount of fun had.
+}
+
+\cvsingletagline{ Dilly Dally Club, President}{Apr 2025 - Forever}
+\cvbullets{
+\item  Always enabling ppl to dilly the dally
+\item  Maximised amount of fun had.
+}
+
+\cvsingletagline{ Dilly Dally Club, President}{Apr 2025 - Forever}
+\cvbullets{
+\item  Always enabling ppl to dilly the dally
+\item  Maximised amount of fun had.
+}
+% Skills
+\cvsection{wrench}{Skills}
+
+\cvbullets{
+  \item \textbf{Software Programming:} Python, C, C++, HTML/CSS, JavaScript, SQL, Bash, Arduino IDE
+  \item \textbf{Software Applications/ Frameworks:} Verilog/SystemVerilog, Git, Numpy, Pandas, Flask, Keras, PyTorch, TensorFlow, Seaborn, Matplotlib, SciPy, AutoDesk Fusion 360, Quartus Lite, Advanced Excel, Vivado HLS, Vitis SDK, Advantest93k ATE/SLT Platforms, Silicon Design Verification – TestBench Development, Docker, CI/CD, vLLM, ROCm, CUDA
+}
+
+% For ATS systems
+ \scalebox{0.001}{\textcolor{white}{insert text here}}
+\end{document} 
