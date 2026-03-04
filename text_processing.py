@@ -7,14 +7,19 @@ def _download_nltk_data_if_needed():
     """Downloads required NLTK data if not already present."""
     try:
         nltk.data.find('tokenizers/punkt')
-    except nltk.downloader.DownloadError:
-        print("Downloading NLTK 'punkt' model...")
+    except:
+        print("Punkt not found! Downloading NLTK 'punkt' model...")
         nltk.download('punkt', quiet=True)
     try:
         nltk.data.find('corpora/stopwords')
-    except nltk.downloader.DownloadError:
-        print("Downloading NLTK 'stopwords'...")
+    except:
+        print("Stopwords not found! Downloading NLTK 'stopwords'...")
         nltk.download('stopwords', quiet=True)
+    try:
+        nltk.data.find('punkt_tab')
+    except:
+        print("punkt_tab not found! Downloading NLTK 'punkt_tab'...")
+        nltk.download('punkt_tab')
 
 # Ensure data is available on import
 _download_nltk_data_if_needed()
