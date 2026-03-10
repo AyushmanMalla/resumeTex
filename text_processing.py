@@ -82,31 +82,48 @@ class SemanticExtractor:
         self.model = SentenceTransformer(model_name, device=self.device)
         self.forbidden_chars = ["\\", "{", "}", "%", "$", "&", "#", "_", "~", "^"]
 
-    def extract_keywords(self, text: str, top_n: int = 15) -> list[str]:
+    def extract_keywords(self, text: str, top_n: int = 15, diversity: float = 0.7) -> list[str]:
         """
         Extract the most semantically relevant keywords from the given text
-        and ensure they are LaTeX safe.
+        and ensure they are LaTeX safe. Leverages MMR to reduce redundancy.
         """
         from sklearn.feature_extraction.text import CountVectorizer
-        from sentence_transformers import util
+        from sklearn.metrics.pairwise import cosine_similarity
+        import numpy as np
         import re
         import nltk
         from nltk.corpus import stopwords
         
         # 1. Clean the original text minimally to retain semantic context
-        cleaned_text = re.sub(r"[^a-zA-Z0-9\s]", " ", text)
+        # Fix missing spaces from bad scraping (e.g. CamelCase concatenated strings)
+        cleaned_text = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', text)
+        cleaned_text = re.sub(r"[^a-zA-Z0-9\s]", " ", cleaned_text)
         cleaned_text = re.sub(r"\s+", " ", cleaned_text).strip()
         
         # 2. Extract candidate n-grams (1 to 2 words)
         try:
-            # Add some custom resume-specific stopwords
-            custom_stop_words = list(stopwords.words('english')) + [
-                'looking', 'developer', 'experience', 'skills', 'good', 'required', 
-                'work', 'team', 'company', 'years', 'using', 'strong', 'ability'
-            ]
-            vectorizer = CountVectorizer(ngram_range=(1, 2), stop_words=custom_stop_words)
+            vectorizer = CountVectorizer(ngram_range=(1, 2))
             vectorizer.fit([cleaned_text])
-            candidates = vectorizer.get_feature_names_out()
+            raw_candidates = vectorizer.get_feature_names_out()
+            
+            # Add some custom resume-specific stopwords
+            custom_stop_words = set(stopwords.words('english')) | {
+                'looking', 'developer', 'experience', 'skills', 'good', 'required', 
+                'work', 'team', 'company', 'years', 'using', 'strong', 'ability',
+                'responsibilities', 'qualifications', 'requirements', 'role',
+                'build', 'develop', 'improve', 'working', 'knowledge'
+            }
+            
+            # Filter candidates so they don't start/end/are stopwords
+            candidates = []
+            for cand in raw_candidates:
+                words = cand.split()
+                if len(words) == 1 and words[0] in custom_stop_words:
+                    continue
+                if len(words) == 2 and (words[0] in custom_stop_words or words[1] in custom_stop_words):
+                    continue
+                candidates.append(cand)
+                
         except ValueError:
             return [] # No words found
             
@@ -114,15 +131,38 @@ class SemanticExtractor:
             return []
             
         # 3. Create contextual embeddings
-        doc_embedding = self.model.encode(cleaned_text, convert_to_tensor=True)
-        candidate_embeddings = self.model.encode(candidates, convert_to_tensor=True)
+        doc_embedding = self.model.encode([cleaned_text]) # 1 x D
+        candidate_embeddings = self.model.encode(candidates) # N x D
         
-        # 4. Calculate cosine similarity
-        distances = util.cos_sim(doc_embedding, candidate_embeddings)[0]
+        # 4. Calculate similarities
+        doc_sims = cosine_similarity(candidate_embeddings, doc_embedding).flatten()
+        cand_sims = cosine_similarity(candidate_embeddings, candidate_embeddings)
         
-        # 5. Get top_n candidates
-        top_indices = distances.argsort(descending=True)[:top_n]
-        top_candidates = [candidates[i] for i in top_indices]
+        # 5. Maximal Marginal Relevance (MMR)
+        selected_idx = [np.argmax(doc_sims)]
+        unselected_idx = list(range(len(candidates)))
+        unselected_idx.remove(selected_idx[0])
+        
+        for _ in range(top_n - 1):
+            if not unselected_idx: 
+                break
+                
+            best_score = -10
+            best_i = -1
+            
+            for i in unselected_idx:
+                sim_to_doc = doc_sims[i]
+                sim_to_selected = max([cand_sims[i][j] for j in selected_idx])
+                
+                score = (1 - diversity) * sim_to_doc - diversity * sim_to_selected
+                if score > best_score:
+                    best_score = score
+                    best_i = i
+                    
+            selected_idx.append(best_i)
+            unselected_idx.remove(best_i)
+            
+        top_candidates = [candidates[i] for i in selected_idx]
         
         # 6. Apply strictly safe LaTeX filtering
         safe_keywords = []
