@@ -42,14 +42,17 @@ def main():
         sys.exit(1)
 
     # 2. Preprocess text to get keywords
-    print("\nPreprocessing text to extract keywords...")
-    ats_keywords = preprocess_text_for_ats(job_description_text)
+    print("\nExtracting semantic keywords using Sentence Transformers...")
+    from text_processing import SemanticExtractor
+    extractor = SemanticExtractor()
+    ats_keywords_list = extractor.extract_keywords(job_description_text)
     
-    if not ats_keywords:
+    if not ats_keywords_list:
         print("\nNo keywords were extracted after processing. Aborting.", file=sys.stderr)
         sys.exit(1)
         
-    print(f"Extracted {len(ats_keywords.split())} potential keywords.")
+    ats_keywords = " ".join(ats_keywords_list)
+    print(f"Extracted {len(ats_keywords_list)} top semantic keywords.")
 
     # 3. Inject keywords into new .tex file
     print("\nInjecting keywords into new LaTeX file...")
