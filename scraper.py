@@ -26,12 +26,38 @@ def playwright_scrape_job_description(url: str, timeout: int = 30000, headless: 
             page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             page.wait_for_timeout(1000)
 
+            # Strip out footers, headers, buttons, and irrelevant blocks cleanly from the DOM
+            page.evaluate("""
+                document.querySelectorAll('button, [role="button"], a.btn, footer, nav, header, aside, form, svg').forEach(el => el.remove());
+            """)
+
             # Use simple extraction
-            text = page.locator("body").inner_text()
+            raw_text = page.locator("body").inner_text()
             browser.close()
             
+            if not raw_text:
+                return ""
+                
+            # Aggressively filter out lines/chunks containing irrelevant boilerplate
+            bad_phrases = [
+                'cookie', 'equal opportunity', 'equal employment', 'benefits', 
+                'social media', 'twitter', 'facebook', 'linkedin', 'instagram',
+                'veteran status', 'sexual orientation', 'gender identity', 'national origin'
+            ]
+            
+            clean_lines = []
+            for line in raw_text.split('\n'):
+                line_lower = line.strip().lower()
+                if not line_lower:
+                    continue
+                if any(phrase in line_lower for phrase in bad_phrases):
+                    continue
+                clean_lines.append(line)
+                
+            text = "\n".join(clean_lines)
+
             if text:
-                logging.info("Extraction successful with Playwright.")
+                logging.info("Extraction and filtering successful with Playwright.")
                 return text.strip()
             return ""
     except PlaywrightTimeoutError:

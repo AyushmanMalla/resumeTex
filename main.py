@@ -27,6 +27,15 @@ def main():
         required=True,
         help="The URL of the job description to scrape."
     )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["keywords", "full_text"],
+        default="keywords",
+        help="Extraction mode:\n"
+             "  keywords  : Extracts semantic keywords using GLiNER (default)\n"
+             "  full_text : Injects the entire scraped text block directly without keyword extraction"
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.resume):
@@ -41,24 +50,32 @@ def main():
         print("\nFailed to retrieve job description. Aborting.", file=sys.stderr)
         sys.exit(1)
 
-    # 2. Preprocess text to get keywords
-    print("\nExtracting semantic keywords using GLiNER...")
-    from text_processing import GLiNERExtractor
-    extractor = GLiNERExtractor()
-    ats_keywords_list = extractor.extract_keywords(job_description_text)
-    
-    if not ats_keywords_list:
-        print("\nNo keywords were extracted after processing. Aborting.", file=sys.stderr)
-        sys.exit(1)
+    # 2. Preprocess text based on mode
+    if args.mode == "keywords":
+        print("\nExtracting semantic keywords using GLiNER...")
+        from text_processing import GLiNERExtractor
+        extractor = GLiNERExtractor()
+        ats_keywords_list = extractor.extract_keywords(job_description_text)
         
-    ats_keywords = " ".join(ats_keywords_list)
-    print(f"Extracted {len(ats_keywords_list)} top semantic keywords.")
+        if not ats_keywords_list:
+            print("\nNo keywords were extracted after processing. Aborting.", file=sys.stderr)
+            sys.exit(1)
+            
+        injected_text = " ".join(ats_keywords_list)
+        print(f"Extracted {len(ats_keywords_list)} top semantic keywords.")
+    else:
+        print("\nUsing full extracted text mode. Filtering LaTeX-breaking characters...")
+        forbidden_chars = ["\\", "{", "}", "%", "$", "&", "#", "_", "~", "^"]
+        injected_text = job_description_text
+        for char in forbidden_chars:
+            injected_text = injected_text.replace(char, "")
+        print(f"Prepared full text block of {len(injected_text)} characters.")
 
     # 3. Inject keywords into new .tex file
-    print("\nInjecting keywords into new LaTeX file...")
+    print("\nInjecting text into new LaTeX file...")
     success = inject_keywords(
         latex_path=args.resume,
-        injected_text=ats_keywords
+        injected_text=injected_text
     )
 
     if success:

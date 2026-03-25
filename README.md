@@ -37,8 +37,12 @@ Once your environment is activated, run the following command in your terminal:
 python main.py --resume <path-to-your-latex-resume> --url <url-to-your-job>
 ```
 
+**Options:**
 *   `--resume`: Path to your source LaTeX resume (`.tex` file). This file must contain the placeholder `#insert text here`. If not provided, it defaults to `TemplateResume.tex`.
 *   `--url`: The URL of the job description to scrape.
+*   `--mode`: The extraction strategy to use.
+    *   `keywords` (default): Uses GLiNER to semantically extract named entities like programming languages, databases, and frameworks.
+    *   `full_text`: Bypasses semantic extraction and injects the raw job description block directly into the resume. This aggressive mode automatically filters out irrelevant chunks like clickable buttons, cookie banners, navbars, footers, corporate benefits, social media handles, and Equal Opportunity Employment (EOE) boilerplate to keep the output laser-focused.
 
 The output will be saved automatically as `output.tex` in your directory.
 
