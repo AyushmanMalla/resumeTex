@@ -62,117 +62,23 @@ def preprocess_text_for_ats(text: str) -> str:
     
     return ' '.join(filtered_tokens)
 
-class SemanticExtractor:
-    """
-    Extracts semantic keywords from a job description using 
-    Sentence Transformers (Contextual Embeddings).
-    """
-    def __init__(self, model_name="all-MiniLM-L6-v2"):
-        import torch
-        from sentence_transformers import SentenceTransformer
-        
-        # Determine the best hardware device available
-        if torch.cuda.is_available():
-            self.device = "cuda"
-        elif torch.backends.mps.is_available():
-            self.device = "mps"
-        else:
-            self.device = "cpu"
-            
-        self.model = SentenceTransformer(model_name, device=self.device)
-        self.forbidden_chars = ["\\", "{", "}", "%", "$", "&", "#", "_", "~", "^"]
+from gliner import GLiNER
 
-    def extract_keywords(self, text: str, top_n: int = 15, diversity: float = 0.7) -> list[str]:
-        """
-        Extract the most semantically relevant keywords from the given text
-        and ensure they are LaTeX safe. Leverages MMR to reduce redundancy.
-        """
-        from sklearn.feature_extraction.text import CountVectorizer
-        from sklearn.metrics.pairwise import cosine_similarity
-        import numpy as np
-        import re
-        import nltk
-        from nltk.corpus import stopwords
-        
-        # 1. Clean the original text minimally to retain semantic context
-        # Fix missing spaces from bad scraping (e.g. CamelCase concatenated strings)
-        cleaned_text = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', text)
-        cleaned_text = re.sub(r"[^a-zA-Z0-9\s]", " ", cleaned_text)
-        cleaned_text = re.sub(r"\s+", " ", cleaned_text).strip()
-        
-        # 2. Extract candidate n-grams (1 to 2 words)
-        try:
-            vectorizer = CountVectorizer(ngram_range=(1, 2))
-            vectorizer.fit([cleaned_text])
-            raw_candidates = vectorizer.get_feature_names_out()
-            
-            # Add some custom resume-specific stopwords
-            custom_stop_words = set(stopwords.words('english')) | {
-                'looking', 'developer', 'experience', 'skills', 'good', 'required', 
-                'work', 'team', 'company', 'years', 'using', 'strong', 'ability',
-                'responsibilities', 'qualifications', 'requirements', 'role',
-                'build', 'develop', 'improve', 'working', 'knowledge'
-            }
-            
-            # Filter candidates so they don't start/end/are stopwords
-            candidates = []
-            for cand in raw_candidates:
-                words = cand.split()
-                if len(words) == 1 and words[0] in custom_stop_words:
-                    continue
-                if len(words) == 2 and (words[0] in custom_stop_words or words[1] in custom_stop_words):
-                    continue
-                candidates.append(cand)
-                
-        except ValueError:
-            return [] # No words found
-            
-        if len(candidates) == 0:
-            return []
-            
-        # 3. Create contextual embeddings
-        doc_embedding = self.model.encode([cleaned_text]) # 1 x D
-        candidate_embeddings = self.model.encode(candidates) # N x D
-        
-        # 4. Calculate similarities
-        doc_sims = cosine_similarity(candidate_embeddings, doc_embedding).flatten()
-        cand_sims = cosine_similarity(candidate_embeddings, candidate_embeddings)
-        
-        # 5. Maximal Marginal Relevance (MMR)
-        selected_idx = [np.argmax(doc_sims)]
-        unselected_idx = list(range(len(candidates)))
-        unselected_idx.remove(selected_idx[0])
-        
-        for _ in range(top_n - 1):
-            if not unselected_idx: 
-                break
-                
-            best_score = -10
-            best_i = -1
-            
-            for i in unselected_idx:
-                sim_to_doc = doc_sims[i]
-                sim_to_selected = max([cand_sims[i][j] for j in selected_idx])
-                
-                score = (1 - diversity) * sim_to_doc - diversity * sim_to_selected
-                if score > best_score:
-                    best_score = score
-                    best_i = i
-                    
-            selected_idx.append(best_i)
-            unselected_idx.remove(best_i)
-            
-        top_candidates = [candidates[i] for i in selected_idx]
-        
-        # 6. Apply strictly safe LaTeX filtering
+class GLiNERExtractor:
+    def __init__(self, model_name="urchade/gliner_base"):
+        self.model = GLiNER.from_pretrained(model_name)
+        self.forbidden_chars = ["\\", "{", "}", "%", "$", "&", "#", "_", "~", "^"]
+        self.labels = ["programming language", "framework", "tool", "database", "methodology"]
+
+    def extract_keywords(self, text, threshold=0.5):
+        entities = self.model.predict_entities(text, self.labels, threshold=threshold)
+        # Filter and LaTeX format
         safe_keywords = []
-        for keyword in top_candidates:
-            # Strip forbidden characters if any sneaked in
+        for entity in entities:
+            keyword = entity["text"]
             for char in self.forbidden_chars:
                 keyword = keyword.replace(char, "")
-            
             keyword = keyword.strip()
-            if keyword:
+            if keyword and keyword not in safe_keywords:
                 safe_keywords.append(keyword)
-                
         return safe_keywords
