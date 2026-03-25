@@ -1,7 +1,7 @@
 import argparse
 import os
 import sys
-from scraper import selenium_scrape_job_description
+from scraper import playwright_scrape_job_description
 from text_processing import preprocess_text_for_ats
 from tex_tools import inject_keywords
 
@@ -35,16 +35,16 @@ def main():
 
     # 1. Scrape job description
     print(f"Scraping job description from: {args.url}")
-    job_description_text = selenium_scrape_job_description(args.url)
+    job_description_text = playwright_scrape_job_description(args.url)
 
     if not job_description_text:
         print("\nFailed to retrieve job description. Aborting.", file=sys.stderr)
         sys.exit(1)
 
     # 2. Preprocess text to get keywords
-    print("\nExtracting semantic keywords using Sentence Transformers...")
-    from text_processing import SemanticExtractor
-    extractor = SemanticExtractor()
+    print("\nExtracting semantic keywords using GLiNER...")
+    from text_processing import GLiNERExtractor
+    extractor = GLiNERExtractor()
     ats_keywords_list = extractor.extract_keywords(job_description_text)
     
     if not ats_keywords_list:
