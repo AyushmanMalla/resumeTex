@@ -63,6 +63,7 @@ def preprocess_text_for_ats(text: str) -> str:
     return ' '.join(filtered_tokens)
 
 from gliner import GLiNER
+import textwrap
 
 class GLiNERExtractor:
     def __init__(self, model_name="urchade/gliner_base"):
@@ -71,14 +72,30 @@ class GLiNERExtractor:
         self.labels = ["programming language", "framework", "tool", "database", "methodology"]
 
     def extract_keywords(self, text, threshold=0.5):
-        entities = self.model.predict_entities(text, self.labels, threshold=threshold)
-        # Filter and LaTeX format
+        # Chunk text to avoid truncation limit (384 tokens is roughly ~1500 chars)
+        # We use textwrap to split text cleanly
+        chunks = textwrap.wrap(text, width=1500, break_long_words=False, replace_whitespace=False)
+        
         safe_keywords = []
-        for entity in entities:
-            keyword = entity["text"]
-            for char in self.forbidden_chars:
-                keyword = keyword.replace(char, "")
-            keyword = keyword.strip()
-            if keyword and keyword not in safe_keywords:
-                safe_keywords.append(keyword)
-        return safe_keywords
+        for chunk in chunks:
+            if not chunk.strip():
+                continue
+            entities = self.model.predict_entities(chunk, self.labels, threshold=threshold)
+            
+            for entity in entities:
+                keyword = entity["text"]
+                for char in self.forbidden_chars:
+                    keyword = keyword.replace(char, "")
+                keyword = keyword.strip()
+                if keyword and keyword not in safe_keywords:
+                    safe_keywords.append(keyword)
+                    
+        # Filter duplicates case-insensitively
+        final_keywords = []
+        seen_lower = set()
+        for k in safe_keywords:
+            if k.lower() not in seen_lower:
+                seen_lower.add(k.lower())
+                final_keywords.append(k)
+                
+        return final_keywords
