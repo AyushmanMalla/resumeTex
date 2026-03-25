@@ -3,10 +3,8 @@ beautifulsoup4>=4.12.0
 transformers>=4.30.0
 torch>=2.0.0
 numpy>=1.24.0
-scikit-learn>=1.0.0
 spacy>=3.5.0
 nltk>=3.8.0
-sentence-transformers>=2.2.0
-selenium
-webdriver-manager
+playwright
+gliner
 pytest>=7.4.0
