@@ -8,11 +8,11 @@ Resume-TeX is a Python-based tool designed to help you tailor your LaTeX resume 
 *   **Semantic Entity Extraction**: Uses **GLiNER** (Generalist Model for Named Entity Recognition) to intelligently identify and extract meaningful keywords representing skills (like "programming language", "framework", "tool", "database", and "methodology"). It handles extremely long job descriptions using automated text chunking to prevent token truncation limits.
 *   **LaTeX Integration**: Filters out LaTeX-breaking characters and safely injects the extracted keywords into a specified placeholder in your LaTeX resume.
 *   **Template-Based**: Comes with a template LaTeX resume to get you started quickly.
-*   **Automated Setup Script**: Cross-platform configuration scripts are provided to ensure a reproducible environment with sandboxed dependencies.
+*   **Automated Setup Script**: Cross-platform configuration scripts are provided to ensure a reproducible environment with sandboxed dependencies. Powered by [Astral's `uv`](https://github.com/astral-sh/uv) for blazingly fast dependency resolution and massive bandwidth savings (forces CPU-only PyTorch on Windows/Linux).
 
 ## Setup Instructions
 
-To get up and running, use the provided setup scripts to automate virtual environment creation, Python dependency installation, and Playwright browser retrieval.
+To get up and running, use the provided setup scripts to automate virtual environment creation, Python dependency installation (via `uv`), and Playwright browser retrieval.
 
 **macOS/Linux:**
 ```bash

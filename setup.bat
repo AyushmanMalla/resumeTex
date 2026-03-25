@@ -20,19 +20,17 @@ if %errorlevel% neq 0 (
 )
 echo Python version is compatible (>= 3.9).
 
-:: 2. Network Check
-echo Checking network connectivity...
-ping -n 1 github.com >nul 2>&1
+:: 2. Bootstrap uv for lightning fast installs
+call uv --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Error: Cannot reach github.com. Check your internet connection.
-    exit /b 1
+    echo Bootstrapping Astral 'uv'...
+    python -m pip install uv
 )
-echo Network check passed.
 
 :: 3. Virtual Environment
 if not exist ".venv\" (
-    echo Creating virtual environment in .venv...
-    python -m venv .venv
+    echo Creating virtual environment using uv...
+    uv venv .venv
 ) else (
     echo Virtual environment .venv already exists.
 )
@@ -41,9 +39,9 @@ echo Activating virtual environment...
 call .venv\Scripts\activate.bat
 
 :: 4. Install Dependencies
-echo Installing dependencies from requirements.txt...
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+echo Installing dependencies blazingly fast with uv...
+:: Optimization: use CPU-only PyTorch on Windows to save ~2.5GB of CUDA packages
+uv pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 :: 5. Playwright Installation
 echo Checking and installing Playwright browsers (chromium)...

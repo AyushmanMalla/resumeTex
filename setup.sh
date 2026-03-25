@@ -19,19 +19,16 @@ else
     exit 1
 fi
 
-# 2. Network Check
-echo "Checking network connectivity..."
-if ping -c 1 github.com &> /dev/null; then
-    echo "Network check passed."
-else
-    echo "Error: Cannot reach github.com. Check your internet connection."
-    exit 1
+# 2. Bootstrap uv for lightning-fast installs
+if ! command -v uv &> /dev/null; then
+    echo "Bootstrapping Astral 'uv'..."
+    python3 -m pip install --user uv || python3 -m pip install uv
 fi
 
 # 3. Virtual Environment
 if [ ! -d ".venv" ]; then
-    echo "Creating virtual environment in .venv..."
-    python3 -m venv .venv
+    echo "Creating virtual environment using uv..."
+    uv venv .venv
 else
     echo "Virtual environment .venv already exists."
 fi
@@ -40,14 +37,20 @@ echo "Activating virtual environment..."
 source .venv/bin/activate
 
 # 4. Install Dependencies
-echo "Installing dependencies from requirements.txt..."
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+echo "Installing dependencies blazingly fast with uv..."
+# Optional optimization: use CPU-only PyTorch on Linux to save gigabytes of CUDA packages
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    uv pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+else
+    uv pip install -r requirements.txt
+fi
 
 # 5. Playwright Installation
 echo "Checking and installing Playwright browsers (chromium)..."
 # playwright install is safe to run multiple times, it skips if already installed
 playwright install chromium
 
+echo "============================================================================="
 echo "Setup complete! Navigate to the directory and activate the environment using:"
 echo "source .venv/bin/activate"
+echo "============================================================================="
